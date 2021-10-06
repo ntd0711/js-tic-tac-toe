@@ -6,7 +6,9 @@ import {
   getCellElementAtIdx,
   getGameStatusElement,
   getReplayBtn,
+  getUlElement,
 } from './selectors.js';
+
 import { checkGameStatus } from './utils.js';
 
 /**
@@ -97,9 +99,18 @@ function hideReplayBtn() {
 
 function initCellElementList() {
   const cellElementList = getCellElementList();
-
   cellElementList.forEach((cell, index) => {
-    cell.addEventListener('click', () => handleClickCell(cell, index));
+    cell.dataset.idx = index;
+  });
+
+  const ulElement = getUlElement();
+  if (!ulElement) return;
+
+  ulElement.addEventListener('click', (e) => {
+    if (e.target.tagName !== 'LI') return;
+
+    const index = Number.parseInt(e.target.dataset.idx);
+    handleClickCell(e.target, index);
   });
 }
 
